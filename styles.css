@@ -1,382 +1,329 @@
-/* ========================================
-   リセット & ベース
-   ======================================== */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+:root{
+  --bg:#0b1020;
+  --panel:#121a33;
+  --panel2:#0f1730;
+  --line:#243057;
+  --text:#e9eefc;
+  --muted:#9fb0df;
+  --accent:#7aa2ff;
+  --good:#43d19f;
+  --warn:#ffcc66;
+  --bad:#ff6b8a;
 }
 
-:root {
-  --row-height: 44px;
-  --date-col-width: 56px;
-  --composer-height: 210px;
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    "Hiragino Sans", "Noto Sans JP", sans-serif;
 }
 
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  min-height: 100vh;
-  padding: 8px;
-  padding-bottom: calc(var(--composer-height) + env(safe-area-inset-bottom));
-  color: #333;
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding:10px 12px;
+  border-bottom:1px solid var(--line);
+  position:sticky;
+  top:0;
+  background:rgba(11,16,32,.92);
+  backdrop-filter: blur(10px);
+  z-index:50;
 }
 
-.container {
-  max-width: 1400px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+.leftRow, .rightRow{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  flex-wrap:wrap;
 }
 
-/* ========================================
-   ヘッダー
-   ======================================== */
-.header {
-  background: #fff;
-  padding: 14px 18px;
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.12);
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.select, .btn, .badge{
+  background:var(--panel);
+  border:1px solid var(--line);
+  color:var(--text);
+  border-radius:12px;
+  padding:8px 10px;
+}
+.select{ padding:8px 12px; }
+.btn{
+  cursor:pointer;
+  user-select:none;
+}
+.btn:disabled{
+  opacity:.5;
+  cursor:not-allowed;
+}
+.btn.primary{
+  border-color: rgba(122,162,255,.65);
+}
+.btn:active{ transform: translateY(1px); }
+
+.badge{
+  font-size:12px;
+  color:var(--muted);
+  background:rgba(255,255,255,.03);
 }
 
-.current-month {
-  flex: 1;
-  text-align: center;
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: #667eea;
+.room{
+  color:var(--muted);
+}
+.room code{
+  color:var(--text);
 }
 
-.nav-btn {
-  background: #667eea;
-  color: #fff;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-weight: 700;
-  cursor: pointer;
+.main{
+  display:grid;
+  grid-template-columns: 260px 1fr;
+  gap:12px;
+  padding:12px;
+  height: calc(100vh - 58px);
 }
 
-.nav-btn:hover {
-  background: #5568d3;
+.leftPanel{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:12px;
+  overflow:auto;
 }
 
-/* ========================================
-   カレンダー（常に2列）
-   ======================================== */
-.board-container-split {
-  display: grid;
+.sectionTitle{
+  font-size:13px;
+  color:var(--muted);
+  margin:4px 0 10px;
+}
+
+.modeRow{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:12px;
+}
+.pill{
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.03);
+  color:var(--text);
+  border-radius:999px;
+  padding:7px 11px;
+  cursor:pointer;
+  user-select:none;
+  font-size:12px;
+}
+.pill.active{
+  border-color: rgba(122,162,255,.75);
+}
+
+.itemGrid{
+  display:grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap:8px;
 }
 
-.board-half {
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.12);
-  overflow: hidden;
+.item{
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:10px;
+  background:rgba(255,255,255,.02);
+  cursor:pointer;
+  user-select:none;
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+.item.active{
+  outline: 2px solid rgba(122,162,255,.55);
+}
+.item .emoji{ font-size:18px; }
+.item .label{ font-size:13px; }
+
+.hint{
+  margin-top:12px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.6;
 }
 
-.board {
-  display: flex;
+.note{
+  margin-top:10px;
+  color:rgba(159,176,223,.85);
+  font-size:11px;
+  line-height:1.5;
+  border-top:1px dashed rgba(36,48,87,.7);
+  padding-top:10px;
 }
 
-/* ========================================
-   日付列
-   ======================================== */
-.date-column {
-  width: var(--date-col-width);
-  background: #f1f5f9;
-  border-right: 2px solid #cbd5e1;
+.rightPanel{
+  position:relative;
+  background:var(--panel2);
+  border:1px solid var(--line);
+  border-radius:16px;
+  overflow:hidden;
 }
 
-.date-cell {
-  height: var(--row-height);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  color: #475569;
-  border-bottom: 1px solid #cbd5e1;
+.mapWrap{
+  position:absolute;
+  inset:0;
 }
 
-/* ========================================
-   内容列
-   ======================================== */
-.content-column {
-  flex: 1;
-  background: #fff;
+.mapImg{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  background:#070b17;
 }
 
-.content-cell {
-  height: var(--row-height);
-  padding: 6px 8px;
-  border-bottom: 1px solid #cbd5e1;
-  display: flex;
-  align-items: center;
+.drawCanvas{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  touch-action:none;
 }
 
-/* ========================================
-   投稿表示
-   ======================================== */
-.entries-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  width: 100%;
+.pinLayer{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
 }
 
-.entry-item {
-  background: #e0e7ff;
-  border-left: 3px solid #667eea;
-  border-radius: 6px;
-  padding: 4px 8px;
-  font-size: 0.8rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.entry-item strong {
-  color: #3730a3;
-}
-
-.delete-btn {
-  background: #ef4444;
-  color: #fff;
-  border: none;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  font-size: 0.8rem;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.delete-btn:hover {
-  background: #dc2626;
-}
-
-/* ========================================
-   プレースホルダー
-   ======================================== */
-.placeholder {
-  width: 100%;
-  text-align: center;
-  color: #cbd5e1;
-  font-size: 0.8rem;
-  user-select: none;
-}
-
-/* ========================================
-   下固定 入力欄
-   ======================================== */
-.composer {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 1000;
-}
-
-.composer-panel {
-  background: #fff;
-  border-top: 2px solid #e5e7eb;
-  box-shadow: 0 -6px 20px rgba(0,0,0,0.18);
-  padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
-}
-
-.form-preview {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.form-group label {
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: #475569;
-}
-
-.form-control {
-  padding: 9px;
-  border-radius: 8px;
-  border: 2px solid #e5e7eb;
-  font-size: 0.95rem;
-  background: #fff;
-}
-
-.form-control:focus {
-  outline: none;
-  border-color: #667eea;
-}
-
-.text-input-wrapper {
-  display: flex;
-  gap: 8px;
-}
-
-.quick-btn {
-  background: #fbbf24;
-  color: #78350f;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 14px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.btn-submit {
-  background: #667eea;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 12px;
-  font-size: 1rem;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.btn-submit:hover {
-  background: #5568d3;
-}
-
-/* 名前ボタン（入力欄風） */
-.name-button {
-  text-align: left;
-}
-
-/* ========================================
-   名前選択モーダル
-   ======================================== */
-.name-modal {
-  position: fixed;
-  inset: 0;
-  z-index: 2000;
-  display: none;
-}
-
-.name-modal.is-open {
-  display: block;
-}
-
-.name-modal-backdrop {
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.45);
-}
-
-.name-modal-panel {
-  position: absolute;
-  top: 50%;
-  left: 50%;
+.pin{
+  position:absolute;
   transform: translate(-50%, -50%);
-  background: #fff;
-  width: 90%;
-  max-width: 360px;
+  pointer-events:auto;
+  user-select:none;
+  touch-action:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width: var(--pin-size, 54px);
+  height: var(--pin-size, 54px);
+  padding:0;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.05);/* 透明寄り */
+  backdrop-filter: blur(6px);
+  border-radius: 999px; 
+  box-shadow: 0 6px 22px rgba(0,0,0,.35);
+  cursor:grab;
+}
+.pin:active{ cursor:grabbing; }
+.item .icon{
+  width:20px;
+  height:20px;
+  object-fit:contain;
+  display:block;
+}
+
+.pin .icon{
+  width:28px;
+  height:auto;
+  object-fit:contain;
+  display:block;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,.35));
+}
+/* === スモーク専用の丸ピン === */
+/* スモークの白い範囲 */
+.pin.smoke{
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+/* 白い円 */
+.pin.smoke .smoke-circle{
+  position:absolute;
+  inset:0;
+  border-radius:50%;
+  background: rgba(255,255,255,0.95);
+  box-shadow: 0 0 30px rgba(255,255,255,0.6);
+}
+
+/* 上に乗るスモークのアイコン */
+.pin.smoke .smoke-icon{
+  position:absolute;
+  inset:15%;                 /* ←中央に収まる */
+  width:auto;
+  height:auto;
+  transform:none;
+  object-fit: cover;         /* ドアップ */
+  border-radius:50%;
+  pointer-events:none;
+}
+.toast{
+  position: fixed;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.72);
+  color: rgba(255,255,255,0.92);
+  border: 1px solid rgba(255,255,255,0.14);
+  padding: 10px 12px;
   border-radius: 14px;
-  padding: 16px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-}
-
-.name-modal-title {
+  font-size: 12px;
+  line-height: 1.4;
+  z-index: 9999;
+  max-width: min(92vw, 420px);
   text-align: center;
-  margin-bottom: 12px;
-  font-size: 1.1rem;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .18s ease, transform .18s ease;
 }
 
-.name-list {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 14px;
+.toast.show{
+  opacity: 1;
+  transform: translateX(-50%) translateY(-6px);
 }
+/* ===== スマホで：上にパネル、下にマップ ===== */
+@media (max-width: 900px){
 
-.name-list button {
-  padding: 12px;
-  border-radius: 8px;
-  border: none;
-  background: #e0e7ff;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.name-list button:hover {
-  background: #c7d2fe;
-}
-
-.name-modal-close {
-  width: 100%;
-  padding: 10px;
-  border-radius: 8px;
-  border: none;
-  background: #e5e7eb;
-  font-weight: 700;
-  cursor: pointer;
-}
-/* 下固定入力欄ぶん、カレンダーの下に余白を確保 */
-.bottom-spacer {
-  height: calc(var(--composer-height) + 24px + env(safe-area-inset-bottom));
-}
-
-/* ========================================
-   モバイル最適化（2列維持）
-   ======================================== */
-@media (max-width: 768px) {
-  :root {
-    --row-height: 42px;
-    --date-col-width: 48px;
-    --composer-height: 220px;
+  /* 画面の高さをちゃんと使う */
+  html, body{
+    height:auto;
+  }
+  body{
+    margin: 0;
+     overflow: auto;          /* ←スクロールできるように */
+    -webkit-overflow-scrolling: touch;
+  }
+  /* topbar + main（縦積み） */
+  .main{
+    display: flex;
+    flex-direction: column; /* ←ここで下にマップが行く */
+    height: calc(100vh - 56px); /* topbarの高さに合わせる（あとで微調整OK） */
+    min-height: 0;
   }
 
-  .board-container-split {
-    gap: 8px;
-  }
-
-  .entry-item {
-    font-size: 0.75rem;
-    padding: 3px 6px;
-  }
-
-  .text-input-wrapper {
-    flex-direction: column;
-  }
-
-  .quick-btn {
+  /* 左パネル（上） */
+  .leftPanel{
     width: 100%;
+    flex: 0 0 auto;
+    max-height: none;   /* パネルがデカすぎてマップ潰すの防ぐ */
+    overflow: auto;     /* 中身多いときスクロール */
   }
+
+  /* 右パネル（下：マップ最大） */
+  .rightPanel{
+    width: 100%;
+    flex: 1 1 auto;
+    padding: 500px 0 80px;
+    
+  }
+
+  /* mapWrapを右Panelいっぱいに */
+  #mapWrap{
+     height: 70vh;
+  min-height: 420px;
+}
+/* ピンチ操作をアプリ側で使う */
+.mapWrap{
+  touch-action: none; /* ←ピンチ・ドラッグをJSで扱う */
 }
 
-/* ========================================
-   PCでは下固定解除
-   ======================================== */
-@media (min-width: 900px) {
-  body {
-    padding-bottom: 10px;
-  }
-
-  .composer {
-    position: static;
-  }
-
-  .composer-panel {
-    box-shadow: none;
-    border-top: none;
-  }
-}
