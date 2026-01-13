@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>月間掲示板</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <div class="container">
+
+    <!-- ヘッダー -->
+    <header class="header">
+      <button class="nav-btn" id="prevMonthBtn">◀ 前月</button>
+      <h1 class="current-month" id="currentMonthLabel">----</h1>
+      <button class="nav-btn" id="nextMonthBtn">次月 ▶</button>
+    </header>
+
+    <!-- 月間ボード（2列） -->
+    <div class="board-container-split">
+
+      <!-- 左：1〜15日 -->
+      <div class="board-half">
+        <div class="board">
+          <div class="date-column">
+            <div class="date-cell">1</div>
+            <div class="date-cell">2</div>
+            <div class="date-cell">3</div>
+            <div class="date-cell">4</div>
+            <div class="date-cell">5</div>
+            <div class="date-cell">6</div>
+            <div class="date-cell">7</div>
+            <div class="date-cell">8</div>
+            <div class="date-cell">9</div>
+            <div class="date-cell">10</div>
+            <div class="date-cell">11</div>
+            <div class="date-cell">12</div>
+            <div class="date-cell">13</div>
+            <div class="date-cell">14</div>
+            <div class="date-cell">15</div>
+          </div>
+
+          <div class="content-column">
+            <!-- 1〜15 -->
+            <!-- app.js が entries-row / placeholder を操作 -->
+            <div class="content-cell"><div class="entries-row" data-day="1"></div><div class="placeholder" data-placeholder-day="1">＿＿＿＿＿＿＿＿＿＿＿</div></div>
+            <div class="content-cell"><div class="entries-row" data-day="2"></div><div class="placeholder" data-placeholder-day="2">＿＿＿＿＿＿＿＿＿＿＿</div></div>
+            <div class="content-cell"><div class="entries-row" data-day="3"></div><div class="placeholder" data-placeholder-day="3">＿＿＿＿＿＿＿＿＿＿＿</div></div>
+            <div class="content-cell"><div class="entries-row" data-day="4"></div><div class="placeholder" data-placeholder-day="4">＿＿＿＿＿＿＿＿＿＿＿</div></div>
+            <div class="content-cell"><div class="entries-row" data-day="5"></div><div class="placeholder" data-placeholder-day="5">＿＿＿＿＿＿＿＿＿＿＿</div></div>
+            <div class="content-cell"><div class="entries-row" data-day="6"></div><div class="placeholder" data-placeholder-day="6">＿＿＿＿＿＿＿＿＿＿＿</div></div>
+            <div class="content-cell"><div class="entries-row" data-day="7"></div><div class="placeholder" data-placeholder-day="7">＿＿＿＿＿＿＿＿＿＿＿</div></div>
+            <div class="content-cell"><div class="entries-row" data-day="8"></div><div class="placeholder" data-placeholder-day="8">＿＿＿＿＿＿＿＿＿＿＿</div></div>
+            <div class="content-cell"><div class="entries-row" data-day="9"></div><div class="placeholder" data-placeholder-day="9">＿＿＿＿＿＿＿＿＿＿＿</div></div>
+            <div class="content-cell"><div class="entries-row" data-day="10"></div><div class="placeholder" data-placeholder-day="10">＿＿＿＿＿＿＿＿＿＿＿</div></div>
+            <div class="content-cell"><div class="entries-row" data-day="11"></div><div class="placeholder" data-placeholder-day="11">＿＿＿＿＿＿＿＿＿＿＿</div></div>
+            <div class="content-cell"><div class="entries-row" data-day="12"></div><div class="placeholder" data-placeholder-day="12">＿＿＿＿＿＿＿＿＿＿＿</div></div>
+            <div class="content-cell"><div class="entries-row" data-day="13"></div><div class="placeholder" data-placeholder-day="13">＿＿＿＿＿＿＿＿＿＿＿</div></div>
+            <div class="content-cell"><div class="entries-row" data-day="14"></div><div class="placeholder" data-placeholder-day="14">＿＿＿＿＿＿＿＿＿＿＿</div></div>
+            <div class="content-cell"><div class="entries-row" data-day="15"></div><div class="placeholder" data-placeholder-day="15">＿＿＿＿＿＿＿＿＿＿＿</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 右：16〜30日 -->
+      <div class="board-half">
+        <div class="board">
+          <div class="date-column">
+            <div class="date-cell">16</div>
+            <div class="date-cell">17</div>
+            <div class="date-cell">18</div>
+            <div class="date-cell">19</div>
+            <div class="date-cell">20</div>
+            <div class="date-cell">21</div>
+            <div class="date-cell">22</div>
+            <div class="date-cell">23</div>
+            <div class="date-cell">24</div>
+            <div class="date-cell">25</div>
+            <div class="date-cell">26</div>
+            <div class="date-cell">27</div>
+            <div class="date-cell">28</div>
+            <div class="date-cell">29</div>
+            <div class="date-cell">30</div>
+          </div>
+
+          <div class="content-column">
+            <div class="content-cell"><div class="entries-row" data-day="16"></div><div class="placeholder" data-placeholder-day="16">＿＿＿＿＿＿＿＿＿＿＿</div></div>
+            <div class="content-cell"><div class="entries-row" data-day="17"></div><div class="placeholder" data-placeholder-day="17">＿＿＿＿＿＿＿＿＿＿＿</div></div>
+            <div class="content-cell"><div class="entries-row" data-day="18"></div><div class="placeholder" data-placeholder-day="18">＿＿＿＿＿＿＿＿＿＿＿</div></div>
+            <div class="content-cell"><div class="entries-row" data-day="19"></div><div class="placeholder" data-placeholder-day="19">＿＿＿＿＿＿＿＿＿＿＿</div></div>
+            <div class="content-cell"><div class="entries-row" data-day="20"></div><div class="placeholder" data-placeholder-day="20">＿＿＿＿＿＿＿＿＿＿＿</div></div>
+            <div class="content-cell"><div class="entries-row" data-day="21"></div><div class="placeholder" data-placeholder-day="21">＿＿＿＿＿＿＿＿＿＿＿</div></div>
+            <div class="content-cell"><div class="entries-row" data-day="22"></div><div class="placeholder" data-placeholder-day="22">＿＿＿＿＿＿＿＿＿＿＿</div></div>
+            <div class="content-cell"><div class="entries-row" data-day="23"></div><div class="placeholder" data-placeholder-day="23">＿＿＿＿＿＿＿＿＿＿＿</div></div>
+            <div class="content-cell"><div class="entries-row" data-day="24"></div><div class="placeholder" data-placeholder-day="24">＿＿＿＿＿＿＿＿＿＿＿</div></div>
+            <div class="content-cell"><div class="entries-row" data-day="25"></div><div class="placeholder" data-placeholder-day="25">＿＿＿＿＿＿＿＿＿＿＿</div></div>
+            <div class="content-cell"><div class="entries-row" data-day="26"></div><div class="placeholder" data-placeholder-day="26">＿＿＿＿＿＿＿＿＿＿＿</div></div>
+            <div class="content-cell"><div class="entries-row" data-day="27"></div><div class="placeholder" data-placeholder-day="27">＿＿＿＿＿＿＿＿＿＿＿</div></div>
+            <div class="content-cell"><div class="entries-row" data-day="28"></div><div class="placeholder" data-placeholder-day="28">＿＿＿＿＿＿＿＿＿＿＿</div></div>
+            <div class="content-cell"><div class="entries-row" data-day="29"></div><div class="placeholder" data-placeholder-day="29">＿＿＿＿＿＿＿＿＿＿＿</div></div>
+            <div class="content-cell"><div class="entries-row" data-day="30"></div><div class="placeholder" data-placeholder-day="30">＿＿＿＿＿＿＿＿＿＿＿</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+ <div class="bottom-spacer" aria-hidden="true"></div>
+  <!-- 下固定：入力欄 -->
+  <div class="composer" id="composer">
+    <div class="composer-panel">
+      <div class="form-preview">
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>名前</label>
+            <button type="button" id="nameButton" class="form-control name-button">
+              選択してください
+            </button>
+            <input type="hidden" id="nameInput" />
+          </div>
+
+          <div class="form-group">
+            <label for="dateInput">日付</label>
+            <input id="dateInput" type="date" class="form-control" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="contentInput">内容</label>
+          <div class="text-input-wrapper">
+            <input
+              id="contentInput"
+              type="text"
+              class="form-control"
+              placeholder="やすみ・午後休など"
+            />
+            <button type="button" class="quick-btn" id="quickHolidayBtn">
+              やすみ
+            </button>
+          </div>
+        </div>
+
+        <button type="button" class="btn-submit" id="submitBtn">
+          送信
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- 名前選択モーダル -->
+  <div class="name-modal" id="nameModal">
+    <div class="name-modal-backdrop" id="nameModalBackdrop"></div>
+
+    <div class="name-modal-panel">
+      <h3 class="name-modal-title">名前を選択</h3>
+
+      <div class="name-list">
+        <button data-name="関">関</button>
+        <button data-name="黒川">黒川</button>
+        <button data-name="きみさん">吉田 喜三次</button>
+        <button data-name="下羽">下羽</button>
+        <button data-name="吉田広司">吉田広司</button>
+        <button data-name="加藤">加藤</button>
+        <button data-name="前田">前田</button>
+        <button data-name="カイボウ">陽</button>
+        <button data-name="智之">之</button>
+        <button data-name="智子">子</button>
+      </div>
+
+      <button class="name-modal-close" id="nameModalClose">
+        キャンセル
+      </button>
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>

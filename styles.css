@@ -1,0 +1,382 @@
+/* ========================================
+   リセット & ベース
+   ======================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --row-height: 44px;
+  --date-col-width: 56px;
+  --composer-height: 210px;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  padding: 8px;
+  padding-bottom: calc(var(--composer-height) + env(safe-area-inset-bottom));
+  color: #333;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ========================================
+   ヘッダー
+   ======================================== */
+.header {
+  background: #fff;
+  padding: 14px 18px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.current-month {
+  flex: 1;
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #667eea;
+}
+
+.nav-btn {
+  background: #667eea;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.nav-btn:hover {
+  background: #5568d3;
+}
+
+/* ========================================
+   カレンダー（常に2列）
+   ======================================== */
+.board-container-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.board-half {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+  overflow: hidden;
+}
+
+.board {
+  display: flex;
+}
+
+/* ========================================
+   日付列
+   ======================================== */
+.date-column {
+  width: var(--date-col-width);
+  background: #f1f5f9;
+  border-right: 2px solid #cbd5e1;
+}
+
+.date-cell {
+  height: var(--row-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: #475569;
+  border-bottom: 1px solid #cbd5e1;
+}
+
+/* ========================================
+   内容列
+   ======================================== */
+.content-column {
+  flex: 1;
+  background: #fff;
+}
+
+.content-cell {
+  height: var(--row-height);
+  padding: 6px 8px;
+  border-bottom: 1px solid #cbd5e1;
+  display: flex;
+  align-items: center;
+}
+
+/* ========================================
+   投稿表示
+   ======================================== */
+.entries-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  width: 100%;
+}
+
+.entry-item {
+  background: #e0e7ff;
+  border-left: 3px solid #667eea;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.entry-item strong {
+  color: #3730a3;
+}
+
+.delete-btn {
+  background: #ef4444;
+  color: #fff;
+  border: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  background: #dc2626;
+}
+
+/* ========================================
+   プレースホルダー
+   ======================================== */
+.placeholder {
+  width: 100%;
+  text-align: center;
+  color: #cbd5e1;
+  font-size: 0.8rem;
+  user-select: none;
+}
+
+/* ========================================
+   下固定 入力欄
+   ======================================== */
+.composer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+}
+
+.composer-panel {
+  background: #fff;
+  border-top: 2px solid #e5e7eb;
+  box-shadow: 0 -6px 20px rgba(0,0,0,0.18);
+  padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+}
+
+.form-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.form-group label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #475569;
+}
+
+.form-control {
+  padding: 9px;
+  border-radius: 8px;
+  border: 2px solid #e5e7eb;
+  font-size: 0.95rem;
+  background: #fff;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.text-input-wrapper {
+  display: flex;
+  gap: 8px;
+}
+
+.quick-btn {
+  background: #fbbf24;
+  color: #78350f;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-submit {
+  background: #667eea;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-submit:hover {
+  background: #5568d3;
+}
+
+/* 名前ボタン（入力欄風） */
+.name-button {
+  text-align: left;
+}
+
+/* ========================================
+   名前選択モーダル
+   ======================================== */
+.name-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: none;
+}
+
+.name-modal.is-open {
+  display: block;
+}
+
+.name-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+}
+
+.name-modal-panel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  width: 90%;
+  max-width: 360px;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+
+.name-modal-title {
+  text-align: center;
+  margin-bottom: 12px;
+  font-size: 1.1rem;
+}
+
+.name-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.name-list button {
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  background: #e0e7ff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.name-list button:hover {
+  background: #c7d2fe;
+}
+
+.name-modal-close {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background: #e5e7eb;
+  font-weight: 700;
+  cursor: pointer;
+}
+/* 下固定入力欄ぶん、カレンダーの下に余白を確保 */
+.bottom-spacer {
+  height: calc(var(--composer-height) + 24px + env(safe-area-inset-bottom));
+}
+
+/* ========================================
+   モバイル最適化（2列維持）
+   ======================================== */
+@media (max-width: 768px) {
+  :root {
+    --row-height: 42px;
+    --date-col-width: 48px;
+    --composer-height: 220px;
+  }
+
+  .board-container-split {
+    gap: 8px;
+  }
+
+  .entry-item {
+    font-size: 0.75rem;
+    padding: 3px 6px;
+  }
+
+  .text-input-wrapper {
+    flex-direction: column;
+  }
+
+  .quick-btn {
+    width: 100%;
+  }
+}
+
+/* ========================================
+   PCでは下固定解除
+   ======================================== */
+@media (min-width: 900px) {
+  body {
+    padding-bottom: 10px;
+  }
+
+  .composer {
+    position: static;
+  }
+
+  .composer-panel {
+    box-shadow: none;
+    border-top: none;
+  }
+}
