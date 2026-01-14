@@ -84,7 +84,22 @@ body {
 .board {
   display: flex;
 }
+/* 土日祝日の色分け */
+.date-cell.saturday {
+  color: #0066cc;
+  background-color: #e6f2ff;
+}
 
+.date-cell.holiday {
+  color: #cc0000;
+  background-color: #ffe6e6;
+}
+
+.holiday-name {
+  font-size: 0.75em;
+  color: #cc0000;
+  font-weight: normal;
+}
 /* ========================================
    日付列
    ======================================== */
@@ -182,7 +197,6 @@ body {
   bottom: 0;
   z-index: 1000;
 }
-
 .composer-panel {
   background: #fff;
   border-top: 2px solid #e5e7eb;
