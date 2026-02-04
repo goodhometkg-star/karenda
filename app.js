@@ -484,4 +484,5 @@ contentInput.addEventListener("keydown", (e) => {
 /* ======================
    start
 ====================== */
+dateInput.value = `${now.getFullYear()}-${pad2(now.getMonth() + 1)}-${pad2(now.getDate())}`;
 subscribeMonth(viewYear, viewMonth);
