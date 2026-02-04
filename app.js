@@ -50,6 +50,29 @@ const POSTS_PATH = "calendar_posts";
 /* 祝日キャッシュ */
 let holidaysCache = {};
 
+/* 表示中の投稿データ（日付タップ用） */
+let currentPosts = [];
+
+/* 名前→フルネームのマッピング */
+const NAME_FULL_MAP = {};
+document.querySelectorAll(".name-list button").forEach(btn => {
+  NAME_FULL_MAP[btn.dataset.name] = btn.textContent.trim();
+});
+
+function getFullName(shortName) {
+  return NAME_FULL_MAP[shortName] || shortName;
+}
+
+/* カレンダー表示用の短縮名マッピング（下の名前だけ表示したい人） */
+const CALENDAR_SHORT_MAP = {
+  "吉田広司": "広司",
+  "きみさん": "喜三次",
+};
+
+function getCalendarName(name) {
+  return CALENDAR_SHORT_MAP[name] || name;
+}
+
 /* ======================
    utils
 ====================== */
@@ -99,7 +122,7 @@ function getLastDayOfMonth(y, m) {
 ====================== */
 async function fetchHolidays(year) {
   if (holidaysCache[year]) return holidaysCache[year];
-  
+
   try {
     const res = await fetch(`https://holidays-jp.github.io/api/v1/${year}/date.json`);
     if (!res.ok) throw new Error("祝日API取得失敗");
@@ -142,16 +165,16 @@ function refreshPlaceholders() {
 async function updateDateHeaders(y, m) {
   const holidays = await fetchHolidays(y);
   const lastDay = getLastDayOfMonth(y, m);
-  
+
   for (let d = 1; d <= 31; d++) {
     const dateCell = document.querySelector(`.date-cell[data-day="${d}"]`);
     if (!dateCell) continue;
-    
+
     // 対応するコンテンツセルを取得
     const contentCell = dateCell.closest('.date-column')
       ?.nextElementSibling
       ?.querySelector(`.content-cell:nth-child(${d <= 15 ? d : d - 15})`);
-    
+
     // 31日がない月は非表示
     if (d === 31 && lastDay < 31) {
       dateCell.style.display = 'none';
@@ -161,19 +184,19 @@ async function updateDateHeaders(y, m) {
       dateCell.style.display = '';
       if (contentCell) contentCell.style.display = '';
     }
-    
+
     const dow = getDayOfWeek(y, m, d);
     const weekdayName = WEEKDAY_NAMES[dow];
     const holiday = isHoliday(y, m, d, holidays);
-    
+
     // 既存の日付表示を更新
     let dateText = `${d}日（${weekdayName}）`;
     if (holiday) {
       dateText += `<br><span class="holiday-name">${holiday}</span>`;
     }
-    
+
     dateCell.innerHTML = dateText;
-    
+
     // CSSクラス追加
     dateCell.classList.remove("saturday", "sunday", "holiday");
     if (holiday || dow === 0) {
@@ -184,12 +207,22 @@ async function updateDateHeaders(y, m) {
   }
 }
 
-function createEntryItem({ id, name, text }) {
-  const item = document.createElement("div");
+/* カレンダーセル用：名前の頭1文字だけ表示 */
+function createEntryItem({ name }) {
+  const item = document.createElement("span");
   item.className = "entry-item";
+  const displayName = getCalendarName(name);
+  item.textContent = displayName.charAt(0);
+  return item;
+}
+
+/* モーダル用：フルネーム＋内容＋削除ボタン */
+function createDetailItem({ id, name, text }) {
+  const item = document.createElement("div");
+  item.className = "detail-entry";
 
   const strong = document.createElement("strong");
-  strong.textContent = name;
+  strong.textContent = getFullName(name);
 
   const sep = document.createTextNode("：");
 
@@ -200,7 +233,6 @@ function createEntryItem({ id, name, text }) {
   del.className = "delete-btn";
   del.textContent = "×";
   del.addEventListener("click", async () => {
-    if (!confirm("削除する？")) return;
     await remove(ref(db, `${POSTS_PATH}/${id}`));
   });
 
@@ -228,7 +260,7 @@ function subscribeMonth(y, m) {
 
   const ym = getYearMonthKey(y, m);
   setMonthLabel(y, m);
-  
+
   // 曜日・祝日ヘッダー更新
   updateDateHeaders(y, m);
 
@@ -243,7 +275,11 @@ function subscribeMonth(y, m) {
 
     const data = snap.val();
     if (!data) {
+      currentPosts = [];
       refreshPlaceholders();
+      if (openDetailDay !== null && dayDetailModal.classList.contains("is-open")) {
+        renderDayDetail();
+      }
       return;
     }
 
@@ -259,6 +295,8 @@ function subscribeMonth(y, m) {
       a.day !== b.day ? a.day - b.day : a.createdAt - b.createdAt
     );
 
+    currentPosts = posts;
+
     posts.forEach(p => {
       if (p.day < 1 || p.day > 31) return;
       const row = document.querySelector(`.entries-row[data-day="${p.day}"]`);
@@ -267,6 +305,10 @@ function subscribeMonth(y, m) {
     });
 
     refreshPlaceholders();
+
+    if (openDetailDay !== null && dayDetailModal.classList.contains("is-open")) {
+      renderDayDetail();
+    }
   };
 
   onValue(qref, cb);
@@ -282,9 +324,9 @@ async function handleSubmit() {
   const dateVal = dateInput.value;
   const text = contentInput.value.trim();
 
-  if (!name) return alert("名前を選んでね");
-  if (!dateVal) return alert("日付を選んでね");
-  if (!text) return alert("内容を入れてね");
+  if (!name) return alert("名前を選択");
+  if (!dateVal) return alert("日付を選択");
+  if (!text) return alert("内容を入力");
 
   const ymObj = getYMFromDateValue(dateVal);
   const day = getDayFromDateValue(dateVal);
@@ -336,6 +378,64 @@ document.querySelectorAll(".name-list button").forEach(btn => {
     closeNameModal();
   });
 });
+
+/* ======================
+   日付詳細モーダル
+====================== */
+const dayDetailModal = document.getElementById("dayDetailModal");
+const dayDetailBackdrop = document.getElementById("dayDetailBackdrop");
+const dayDetailClose = document.getElementById("dayDetailClose");
+const dayDetailTitle = document.getElementById("dayDetailTitle");
+const dayDetailList = document.getElementById("dayDetailList");
+
+let openDetailDay = null;
+
+function openDayDetail(day) {
+  openDetailDay = day;
+  renderDayDetail();
+  dayDetailModal.classList.add("is-open");
+}
+
+function renderDayDetail() {
+  if (openDetailDay === null) return;
+  const dayPosts = currentPosts.filter(p => p.day === openDetailDay);
+
+  if (dayPosts.length === 0 && dayDetailModal.classList.contains("is-open")) {
+    closeDayDetail();
+    return;
+  }
+
+  dayDetailTitle.textContent = `${viewMonth}月${openDetailDay}日`;
+  dayDetailList.innerHTML = "";
+
+  dayPosts.forEach(p => {
+    dayDetailList.appendChild(createDetailItem(p));
+  });
+}
+
+function closeDayDetail() {
+  openDetailDay = null;
+  dayDetailModal.classList.remove("is-open");
+}
+
+dayDetailBackdrop.addEventListener("click", closeDayDetail);
+dayDetailClose.addEventListener("click", closeDayDetail);
+
+/* 日付セル・コンテンツセルのクリックで詳細モーダルを開く */
+for (let d = 1; d <= 31; d++) {
+  const dateCell = document.querySelector(`.date-cell[data-day="${d}"]`);
+  const contentCell = dateCell?.closest('.date-column')
+    ?.nextElementSibling
+    ?.querySelector(`.content-cell:nth-child(${d <= 15 ? d : d - 15})`);
+
+  if (dateCell) {
+    dateCell.style.cursor = "pointer";
+    dateCell.addEventListener("click", () => openDayDetail(d));
+  }
+  if (contentCell) {
+    contentCell.addEventListener("click", () => openDayDetail(d));
+  }
+}
 
 /* ======================
    月切り替え
