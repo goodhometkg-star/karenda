@@ -463,6 +463,10 @@ nextMonthBtn.addEventListener("click", () => {
 ====================== */
 submitBtn.addEventListener("click", handleSubmit);
 
+dateInput.addEventListener("click", () => {
+  try { dateInput.showPicker(); } catch (e) { /* 非対応ブラウザは無視 */ }
+});
+
 quickHolidayBtn.addEventListener("click", () => {
   contentInput.value = contentInput.value
     ? `${contentInput.value}、やすみ`
