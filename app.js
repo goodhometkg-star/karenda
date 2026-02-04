@@ -67,6 +67,8 @@ function getFullName(shortName) {
 const CALENDAR_SHORT_MAP = {
   "吉田広司": "広司",
   "きみさん": "喜三次",
+  "智之": "之",
+  "智子": "子",
 };
 
 function getCalendarName(name) {
